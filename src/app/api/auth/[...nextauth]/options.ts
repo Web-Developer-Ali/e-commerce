@@ -51,9 +51,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user , session , trigger }) {
      
-      // if (trigger === 'update' && session?.otpVerified) {
-      //   token.otpVerified = session.otpVerified
-      // }
+      if (trigger === 'update' && session?.otpVerified) {
+        token.otpVerified = session.otpVerified
+      }
       // When a user logs in, we can set the token properties
       if (user) {
         token._id = user._id?.toString();
