@@ -83,6 +83,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role;
         session.user.otpVerified = token.otpVerified;
       }
+       console.log(process.env.NAXTAUTH_SECRET)
       return session;
     },
   },
@@ -95,5 +96,5 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
     updateAge: 24 * 60 * 60,
   },
-  secret: process.env.NAXTAUTH_SECRET,
+   secret: process.env.NAXTAUTH_SECRET,
 };
