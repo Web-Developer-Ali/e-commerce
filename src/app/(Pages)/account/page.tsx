@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { ApiResponce } from "@/types/ApiResponce";
-import { useRefreshToken } from "@/lib/useRefreshToken";
 import nprogress from "nprogress";
 import 'nprogress/nprogress.css';  // Import the nprogress CSS
 
