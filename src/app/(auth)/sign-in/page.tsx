@@ -34,6 +34,7 @@ const SignInPage: React.FC = () => {
         email: data.identifier,
         password: data.password,
       });
+      console.log(result)
       if (result?.error) {
         if (result.error.includes('User not found')) {
           toast({
