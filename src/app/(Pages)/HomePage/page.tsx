@@ -1,5 +1,4 @@
 "use client";
-import { getSession, signOut , useSession } from "next-auth/react";
 import Carousel from "@/components/Carousel";
 import CategoryCard from "@/components/CategoryCard";
 import React, { useEffect, useState } from "react";
@@ -38,8 +37,6 @@ const gotoCategoryPage = (selectedCategory: string) => {
 
   useEffect(() => {
     const fetchRandomProducts = async () => {
-      const sessionData = await getSession();
-      console.log(sessionData)
       try {
         const response = await axios.get("/api/homepage_products");
         setRandomProducts(response.data);

@@ -34,7 +34,6 @@ const SignInPage: React.FC = () => {
         email: data.identifier,
         password: data.password,
       });
-      console.log(result)
       if (result?.error) {
         if (result.error.includes('User not found')) {
           toast({
@@ -57,7 +56,7 @@ const SignInPage: React.FC = () => {
         }
         setIsSubmitting(false);
       } else if (result?.url) {
-        router.replace('/');
+        router.push('/');
       }
       
     } catch (error) {
