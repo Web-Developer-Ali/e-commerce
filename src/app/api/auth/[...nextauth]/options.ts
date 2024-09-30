@@ -49,9 +49,10 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, session, trigger }) {
+    async jwt({ token, user , session , trigger }) {
+     
       if (trigger === 'update' && session?.otpVerified) {
-        token.otpVerified = session.otpVerified;
+        token.otpVerified = session.otpVerified
       }
       // When a user logs in, we can set the token properties
       if (user) {
@@ -65,13 +66,14 @@ export const authOptions: NextAuthOptions = {
         // If the user object is not provided, fetch the user from the database
         await dbConnection();
         const dbUser = await UserModel.findById(token._id);
+  
         if (dbUser) {
           token.role = dbUser.role; // Update the token role if it has changed in the database
         }
       }
       return token;
     },
-
+  
     async session({ session, token }) {
       if (token) {
         session.user._id = token._id;
@@ -81,30 +83,17 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role;
         session.user.otpVerified = token.otpVerified;
       }
-      return session;
+           return session;
     },
   },
-
+  
   pages: {
     signIn: "/auth/sign-in",
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    maxAge: 30 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
   },
-
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax', // Adjust based on your CSRF prevention needs
-        path: '/',
-        secure: process.env.NODE_ENV === 'production', // Only set secure cookies in production
-      },
-    },
-  },
-
-  secret: process.env.NAXTAUTH_SECRET,
+   secret: process.env.NAXTAUTH_SECRET,
 };
