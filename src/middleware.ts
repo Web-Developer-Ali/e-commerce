@@ -8,9 +8,7 @@ export const config = {
 
 export async function middleware(request: NextRequest) {
   const secret = process.env.NAXTAUTH_SECRET;
-  console.log(secret)
   const token = await getToken({ req: request, secret });
-  console.log(token)
   const url = request.nextUrl;
   // If the user is authenticated and tries to access login or sign-up pages, redirect to the dashboard
   if (

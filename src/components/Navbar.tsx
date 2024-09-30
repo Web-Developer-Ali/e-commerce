@@ -21,6 +21,24 @@ const Navbar = () => {
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
   const router = useRouter();
+  // handle account routing
+  const handleAccountClick = (e: React.MouseEvent) => {
+    const screenWidth = window.innerWidth;
+    
+    // Check if the screen size is for computers (e.g., >= 1024px)
+    if (screenWidth >= 1024) {
+      e.preventDefault(); // Prevent immediate navigation
+      
+      // Reload the home page
+      router.refresh();
+      
+      // Add a slight delay to allow page reload, then navigate to account page
+      setTimeout(() => {
+        router.push("/account");
+      }, 500); // 500ms delay to ensure the page reloads
+    }
+  };
+  
   // Handle theme change
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
@@ -196,13 +214,14 @@ const Navbar = () => {
             <FaShoppingCart className="mr-1" />
             Cart
           </Link>
-          <Link
+          <a
             href="/account"
+            onClick={handleAccountClick}
             className="text-green-600 dark:text-gray-100 hover:text-green-700 dark:hover:text-gray-300 flex items-center"
           >
             <FaUser className="mr-1" />
             Account
-          </Link>
+          </a>
         </div>
         <div className="flex items-center">
           {!isOpen && (
