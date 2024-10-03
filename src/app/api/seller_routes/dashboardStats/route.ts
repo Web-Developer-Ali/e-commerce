@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
   try {
     // Extract userId from the request body
     const { userId } = await req.json();
-console.log(userId)
     // Connect to the database
     await dbConnect();
 
@@ -33,7 +32,7 @@ console.log(userId)
         { $match: { sellerId: sellerObjectId, status: 'Completed' } },
         { $group: { _id: null, total: { $sum: '$totalAmount' } } }
       ]),
-      OrderModel.countDocuments({ sellerId: sellerObjectId, status: 'Completed' }),
+      OrderModel.countDocuments({ sellerId: sellerObjectId }),
       ProductModel.countDocuments({ Product_Seller: sellerObjectId })
     ]);
 
@@ -47,7 +46,7 @@ console.log(userId)
       inventory_count: inventoryCount.toString(), // Assuming you want to store as string
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: 'Total sales, orders, and inventory updated', 
       total, 
       totalOrderCount,

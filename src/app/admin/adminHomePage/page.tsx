@@ -34,7 +34,7 @@ const AdminHomePage: React.FC = () => {
         const response = await axios.post("/api/seller_routes/dashboardStats", {
           userId: userId,
         });
-
+console.log(response)
         setStats(response.data);
       } catch (error) {
         setError("Failed to load dashboard statistics.");

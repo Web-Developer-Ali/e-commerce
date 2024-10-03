@@ -16,6 +16,7 @@ export interface Product extends Document {
     sub_categories?: string[];
   }[];
   Product_Seller: mongoose.Schema.Types.ObjectId;
+  createdAt: Date;
   avgRating?: number; // Optional field for average rating
 }
 
@@ -92,6 +93,10 @@ const ProductSchema: Schema<Product> = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Seller",
     required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now, // Automatically set to current date when a product is created
   },
 });
 

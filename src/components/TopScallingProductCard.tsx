@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface ProductCardProps {
   imageSrc: string;
   title: string;
   price: string;
-  discountedPrice: string;
+  id: string
   ProductScaller: string;
   rating: number;
   imageWidth: number;  // Added width property
@@ -18,20 +19,23 @@ function TopScallingProductCard({
   imageSrc,
   title,
   price,
-  discountedPrice,
+  id,
   ProductScaller,
   rating,
   imageWidth,  // Added width property
   imageHeight, // Added height property
 }: ProductCardProps) {
-  const [isLiked, setIsLiked] = useState(false);
+  const router = useRouter();
 
-  const handleLikeToggle = () => {
-    setIsLiked(!isLiked);
+  const goToProductPage = () => {
+    router.push(`/product_page/${id}`)
   };
 
+  // Truncate title to a maximum of 15 characters
+  const truncatedTitle = title.length > 15 ? `${title.slice(0, 15)}...` : title;
+
   return (
-    <div className="max-w-80 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 flex relative cursor-pointer mb-4">
+    <div onClick={goToProductPage} className="max-w-80 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 flex relative cursor-pointer mb-4">
       <Image
         className="w-1/3 h-24 object-cover rounded-l-lg mt-4"
         src={imageSrc}
@@ -42,7 +46,7 @@ function TopScallingProductCard({
       <div className="p-4 flex flex-col justify-between w-2/3">
         <div>
           <h5 className="mb-1 text-base font-semibold text-gray-900 dark:text-white">
-            {title}
+            {truncatedTitle}
           </h5>
           <div className="flex items-center mb-2">
             {Array.from({ length: 5 }, (_, index) => (
@@ -59,10 +63,8 @@ function TopScallingProductCard({
           </p>
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-sm font-semibold text-green-500">
-            {discountedPrice}
-          </p>
-          <p className="text-sm font-semibold text-gray-900 dark:text-white line-through">
+
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">
             {price}
           </p>
         </div>

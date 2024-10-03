@@ -46,7 +46,7 @@ function TopProductCard({
   };
 
   return (
-    <div className="relative  flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+    <div className="relative flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-700">
       <div
         className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl cursor-pointer"
         onClick={handleImageClick}
@@ -63,7 +63,7 @@ function TopProductCard({
       <div className="mt-4 px-5 pb-5">
         <div>
           <h5
-            className="text-xl font-semibold text-slate-900 overflow-hidden overflow-ellipsis whitespace-nowrap"
+            className="text-xl font-semibold text-slate-900 dark:text-white overflow-hidden overflow-ellipsis whitespace-nowrap"
             style={{ width: "200px" }}
           >
             {title}
@@ -71,20 +71,20 @@ function TopProductCard({
         </div>
         <div className="mt-2 mb-5 flex items-center justify-between">
           <p>
-            <span className="text-3xl font-bold text-slate-900">{price}</span>
+            <span className="text-3xl font-bold text-slate-900 dark:text-white">{price}</span>
           </p>
           <div className="flex items-center">
             <StarRating rating={rating} />
-            <span className="mr-2 ml-3 rounded bg-yellow-200 px-2.5 py-0.5 text-xs font-semibold">
-              {rating} {/* Display the rating */}
+            <span className="mr-2 ml-3 rounded bg-yellow-200 dark:bg-yellow-300 px-2.5 py-0.5 text-xs font-semibold">
+              {rating}
             </span>
           </div>
         </div>
         <button
           onClick={addProductToWishList}
           className={`${
-            isLiked ? "text-red-500" : "text-gray-500"
-          } flex items-center justify-center rounded-md bg-slate-900 px-10 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300`}
+            isLiked ? "text-red-500" : "text-gray-500 dark:text-gray-400"
+          } flex items-center justify-center rounded-md bg-slate-900 dark:bg-slate-600 px-10 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 dark:hover:bg-gray-500 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-gray-500`}
         >
           {isLiked ? "Liked" : "Like"}
         </button>

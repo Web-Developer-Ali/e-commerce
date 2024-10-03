@@ -8,7 +8,6 @@ import JewelryPic from "../../../../public/JewelryPic.png";
 import Health_Beautify from "../../../../public/Health & Beautify.png";
 import Kitchen from "../../../../public/Kitchen.png";
 import ProductCard from "@/components/ProductCard";
-import StickyBar from "@/components/StickyBar";
 import TopScallingProductCard from "@/components/TopScallingProductCard";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/navigation";
@@ -18,38 +17,69 @@ interface Product {
   Name: string;
   Price: number;
   Product_Images: { public_id: string; url: string }[];
-  ProductScaller: string; // Add this if your Product interface includes a scaler
-  discountedPrice: number; // Add this if you have discountedPrice in your data
-  rating: number; // Add this if you have rating in your data
+  ProductScaller: string;
+  discountedPrice?: number;
+  rating: number;
   AboutProduct: string;
   avgRating: number;
 }
 
+interface TopProduct {
+  product: Product;
+}
+
 function Page() {
   const [randomProducts, setRandomProducts] = useState<Product[]>([]);
-  const [category,setCategory] = useState('')
+  const [recentlyAddedProducts, setRecentlyAddedProducts] = useState<Product[]>([]);
+  const [topSellingProducts, setTopSellingProducts] = useState<TopProduct[]>([]);
+  const [topRatedProducts, setTopRatedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Added loading state
   const router = useRouter();
-const gotoCategoryPage = (selectedCategory: string) => {
-  // Set the category state and navigate using the selectedCategory directly
-  setCategory(selectedCategory);
-  router.push(`/category/${selectedCategory}`);
-};
+
+  const gotoCategoryPage = (selectedCategory: string) => {
+    router.push(`/category/${selectedCategory}`);
+  };
 
   useEffect(() => {
     const fetchRandomProducts = async () => {
       try {
-        const response = await axios.get("/api/homepage_products");
-        setRandomProducts(response.data);
+        const response = await axios.get<Product[]>("/api/homepage_products");
+        setTimeout(() => {
+          setRandomProducts(response.data);
+          setLoading(false);
+        }, 2000); // Adding a 2-second delay
       } catch (error) {
         console.error("Error fetching random products:", error);
+        setLoading(false);
       }
     };
 
+    const fetchTopProducts = async () => {
+      try {
+        const response = await axios.get<{
+          topSellingProducts: TopProduct[];
+          recentlyAddedProducts: Product[];
+          topRatedProducts: Product[];
+        }>("/api/getTopSellingProducts");
+        setTimeout(() => {
+          setTopSellingProducts(response.data.topSellingProducts);
+          setRecentlyAddedProducts(response.data.recentlyAddedProducts);
+          setTopRatedProducts(response.data.topRatedProducts);
+          setLoading(false);
+        }, 2000); // Adding a 2-second delay
+      } catch (error) {
+        console.error("Error fetching top products:", error);
+        setLoading(false);
+      }
+    };
+
+    setLoading(true);
+    fetchTopProducts();
     fetchRandomProducts();
   }, []);
+
   return (
     <div className="dark:bg-gray-900">
-      <StickyBar />
       <Carousel />
       <h3 className="mt-4 ml-6 font-bold">FEATURED CATEGORIES</h3>
       <div className="overflow-x-auto whitespace-nowrap hide-scrollbar">
@@ -92,179 +122,143 @@ const gotoCategoryPage = (selectedCategory: string) => {
           />
         </div>
       </div>
-      {/* Popular Products */}
-      <div className="overflow-x-auto whitespace-nowrap p-2 hide-scrollbar mt-4">
-        <div className="flex space-x-8 ml-6">
-          <h1 className="font-bold">Popular Products</h1>
-          <h4 onClick={() => gotoCategoryPage('Electronics')} className="ml-12 cursor-pointer hover:text-green-500">
-  Electronics
-</h4>
-<h4 onClick={() => gotoCategoryPage("Fashion")} className="cursor-pointer hover:text-green-500">
-  Fashion
-</h4>
-<h4 onClick={() => gotoCategoryPage("Home")} className="cursor-pointer hover:text-green-500">
-  Home
-</h4>
-<h4 onClick={() => gotoCategoryPage("Beauty")} className="cursor-pointer hover:text-green-500">
-  Beauty
-</h4>
-<h4 onClick={() => gotoCategoryPage("Sports")} className="cursor-pointer hover:text-green-500">
-  Sports
-</h4>
 
+      {/* Popular Products Section */}
+      <div className="overflow-x-auto whitespace-nowrap p-2 md:p-4 hide-scrollbar mt-4 md:mt-8">
+        <div className="flex space-x-4 md:space-x-12 ml-4 md:ml-6 items-center">
+          <h1 className="font-bold text-xl md:text-2xl">Popular Products</h1>
+          <h4 onClick={() => gotoCategoryPage('Electronics')} className="ml-4 md:ml-12 cursor-pointer hover:text-green-500">
+            Electronics
+          </h4>
+          <h4 onClick={() => gotoCategoryPage("Fashion")} className="cursor-pointer hover:text-green-500">
+            Fashion
+          </h4>
+          <h4 onClick={() => gotoCategoryPage("Home")} className="cursor-pointer hover:text-green-500">
+            Home
+          </h4>
+          <h4 onClick={() => gotoCategoryPage("Beauty")} className="cursor-pointer hover:text-green-500">
+            Beauty
+          </h4>
+          <h4 onClick={() => gotoCategoryPage("Sports")} className="cursor-pointer hover:text-green-500">
+            Sports
+          </h4>
         </div>
       </div>
 
+      {/* Product Cards */}
       <div className="m-4">
-        {/* For small screens */}
-        <div className="overflow-x-auto whitespace-nowrap p-2 hide-scrollbar md:hidden">
-          <div className="flex space-x-6">
-            {randomProducts.map((product) => (
-              <div key={product._id} className="min-w-max">
+        {loading ? (
+          <div className="text-center">Loading products...</div>
+        ) : (
+          <>
+            <div className="overflow-x-auto whitespace-nowrap p-2 hide-scrollbar md:hidden">
+              <div className="flex space-x-6">
+                {randomProducts.map((product) => (
+                  <div key={product._id} className="min-w-max">
+                    <ProductCard
+                      id={product._id}
+                      imageSrc={product.Product_Images[0]?.url || GroceriesPic.src}
+                      title={product.Name}
+                      price={`$${product.Price}`}
+                      rating={product.avgRating || 0}
+                      imageWidth={500}
+                      imageHeight={300}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {randomProducts.map((product) => (
                 <ProductCard
+                  key={product._id}
                   id={product._id}
-                  imageSrc={product.Product_Images[0]?.url || GroceriesPic.src}
+                  imageSrc={product.Product_Images[0]?.url}
                   title={product.Name}
                   price={`$${product.Price}`}
                   rating={product.avgRating || 0}
                   imageWidth={500}
                   imageHeight={300}
                 />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* For medium and large screens */}
-        <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {randomProducts.map((product) => (
-            <ProductCard
-              id={product._id}
-              key={product._id}
-              imageSrc={product.Product_Images[0]?.url}
-              title={product.Name}
-              price={`$${product.Price}`}
-              rating={product.avgRating || 0}
-              imageWidth={500}
-              imageHeight={300}
-            />
-          ))}
-        </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Inform About trending and latest products */}
+      {/* Top Selling, Recently Added, Top Rated Sections */}
       <div className="flex flex-wrap justify-between mt-6 dark:bg-gray-900">
-        {/* Top Selling */}
         <div className="w-full lg:w-1/3 px-4 mb-6">
           <h2 className="text-xl dark:text-white font-bold text-gray-800 tracking-wide mb-3 border-b-2 border-green-500 pb-1">
             Top Selling
           </h2>
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
+          {loading ? (
+            <div className="text-center">Loading top selling products...</div>
+          ) : (
+            topSellingProducts.map(({ product }) => (
+              <TopScallingProductCard
+                id={product._id}
+                key={product._id}
+                imageSrc={product.Product_Images[0]?.url || GroceriesPic.src}
+                title={product.Name}
+                ProductScaller={product.ProductScaller || ''}
+                price={`$${product.Price}`}
+                rating={product.avgRating || 0}
+                imageWidth={500}
+                imageHeight={300}
+              />
+            ))
+          )}
         </div>
-        {/* Recently Added */}
+
         <div className="w-full lg:w-1/3 px-4 mb-6">
           <h2 className="text-xl dark:text-white font-bold text-gray-800 tracking-wide mb-3 border-b-2 border-green-500 pb-1">
             Recently Added
           </h2>
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
+          {loading ? (
+            <div className="text-center">Loading recently added products...</div>
+          ) : (
+            recentlyAddedProducts.map((product) => (
+              <TopScallingProductCard
+                id={product._id}
+                key={product._id}
+                imageSrc={product.Product_Images[0]?.url || GroceriesPic.src}
+                title={product.Name}
+                ProductScaller={product.ProductScaller || ''}
+                price={`$${product.Price}`}
+                rating={product.avgRating || 0}
+                imageWidth={500}
+                imageHeight={300}
+              />
+            ))
+          )}
         </div>
-        {/* Top Rated */}
+
         <div className="w-full lg:w-1/3 px-4 mb-6">
           <h2 className="text-xl dark:text-white font-bold text-gray-800 tracking-wide mb-3 border-b-2 border-green-500 pb-1">
             Top Rated
           </h2>
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
-          <TopScallingProductCard
-            imageSrc={GroceriesPic.src}
-            title={"Hello from Card"}
-            ProductScaller={"Ali"}
-            price={"$200"}
-            discountedPrice={"$100"}
-            rating={4}
-            imageWidth={500}
-            imageHeight={300}
-          />
+          {loading ? (
+            <div className="text-center">Loading top rated products...</div>
+          ) : (
+            topRatedProducts.map((product) => (
+              <TopScallingProductCard
+                id={product._id}
+                key={product._id}
+                imageSrc={product.Product_Images[0]?.url || GroceriesPic.src}
+                title={product.Name}
+                ProductScaller={product.ProductScaller || ''}
+                price={`$${product.Price}`}
+                rating={product.avgRating || 0}
+                imageWidth={500}
+                imageHeight={300}
+              />
+            ))
+          )}
         </div>
       </div>
 
-      {/* \Footer */}
       <Footer />
     </div>
   );

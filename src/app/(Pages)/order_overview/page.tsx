@@ -3,7 +3,8 @@ import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import nprogress from "nprogress";
-import "nprogress/nprogress.css";  
+import "nprogress/nprogress.css";
+import { useRouter } from "next/navigation";
 interface Order {
   _id: string; // Changed 'id' to '_id' to match your order data structure
   createdAt: string; // Changed 'date' to 'createdAt' to match your order data structure
@@ -11,6 +12,7 @@ interface Order {
   status: string;
   totalAmount: number; // Ensure totalAmount matches your API data
   quantity: number; // Ensure quantity matches your API data
+  productId: string;
 }
 
 function Page() {
@@ -21,7 +23,7 @@ function Page() {
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState("All orders");
   const [dateFilter, setDateFilter] = useState("this week");
-
+  const router = useRouter();
   useEffect(() => {
     const GetAllUserOrders = async () => {
       try {
@@ -48,6 +50,10 @@ function Page() {
   const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDateFilter(e.target.value);
   };
+
+  const ShowProductDetails = (id: string) => {
+    router.push(`/product_page/${id}`)
+  }
 
   const filterOrders = () => {
     return orders.filter((order) => {
@@ -82,14 +88,14 @@ function Page() {
     try {
       const response = await axios.delete(`/api/handle_order?orderId=${orderId}`);
       console.log("Order canceled:", response.data);
-  
+
       // Update the orders state by removing the canceled order
       setOrders((prevOrders) => prevOrders.filter(order => order._id !== orderId));
-  
+
       toast({
         title: "Success",
         description: "Order has been canceled.",
-      
+
       });
     } catch (error) {
       console.error("Failed to cancel order:", error);
@@ -102,8 +108,8 @@ function Page() {
       nprogress.done(); // Complete the progress bar
     }
   };
-  
-  
+
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   return (
@@ -229,8 +235,8 @@ function Page() {
                       </button>
 
                       <a
-                        href="#"
-                        className="w-full inline-flex justify-center rounded-lg  border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 lg:w-auto"
+                        onClick={() => ShowProductDetails(order.productId)}
+                        className="w-full inline-flex justify-center rounded-lg cursor-pointer border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 lg:w-auto"
                       >
                         View details
                       </a>

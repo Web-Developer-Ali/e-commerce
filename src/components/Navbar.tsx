@@ -100,13 +100,7 @@ const Navbar = () => {
                 {category || "All Categories"}
               </button>
               <ul className="absolute hidden group-hover:block bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded w-full mt-1 z-50">
-                <li
-                  onClick={() => setCategory("All Categories")}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-                >
-                  All Categories
-                </li>
-                <li
+                               <li
                   onClick={() => setCategory("Electronics")}
                   className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
                 >
@@ -192,14 +186,7 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-        <div className="hidden md:flex space-x-4">
-          <Link
-            href="/compare"
-            className="text-green-600 dark:text-gray-100 hover:text-green-700 dark:hover:text-gray-300 flex items-center"
-          >
-            <FaBalanceScale className="mr-1" />
-            Compare
-          </Link>
+        <div className="hidden md:flex space-x-7">
           <Link
             href="/wishlist"
             className="text-green-600 dark:text-gray-100 hover:text-green-700 dark:hover:text-gray-300 flex items-center"
@@ -315,7 +302,7 @@ const Navbar = () => {
             <input
               type="text"
               placeholder="Search..."
-              className="p-2 h-10 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-700 rounded-r"
+              className="p-6 h-10 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-700 rounded-r"
             />
             <button className="absolute right-0 top-1 mt-2 mr-2">
               <FaSearch className="h-4 w-4 text-gray-900 dark:text-gray-100" />
@@ -326,43 +313,7 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden">
           <div className="flex flex-col space-y-2 mt-2 p-2">
-            <div className="relative group">
-              <button className="p-2 w-full h-10 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-2 border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:bg-gray-200 dark:focus:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition transform hover:scale-105">
-                {location || "Select Location"}
-              </button>
-              <ul className="absolute hidden group-hover:block bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded w-full mt-1 z-50">
-                <li
-                  onClick={() => setLocation("Punjab")}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-                >
-                  Punjab
-                </li>
-                <li
-                  onClick={() => setLocation("Sindh")}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-                >
-                  Sindh
-                </li>
-                <li
-                  onClick={() => setLocation("Islamabad")}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-                >
-                  Islamabad
-                </li>
-                <li
-                  onClick={() => setLocation("Balochistan")}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-                >
-                  Balochistan
-                </li>
-                <li
-                  onClick={() => setLocation("Pakhtunkhwa")}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
-                >
-                  Pakhtunkhwa
-                </li>
-              </ul>
-            </div>
+           
             <Link
               href="/compare"
               className="text-green-600 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 flex items-center mt-2"
