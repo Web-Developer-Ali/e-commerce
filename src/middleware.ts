@@ -8,8 +8,10 @@ export const config = {
 
 export async function middleware(request: NextRequest) {
   const secret = process.env.NAXTAUTH_SECRET;
+  // Remove the encryption property here
   const token = await getToken({ req: request, secret });
   const url = request.nextUrl;
+
   // If the user is authenticated and tries to access login or sign-up pages, redirect to the dashboard
   if (
     token !== null &&
@@ -41,17 +43,17 @@ export async function middleware(request: NextRequest) {
   ) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
-    // Check if the user is trying to access `/change_user_password`
-    if (url.pathname.startsWith("/change_user_password")) {
-      if (token && token.otpVerified) {
-        // Allow access if OTP is verified without redirection
-        return NextResponse.next(); // Allow access to the page
-      } else {
-        // Redirect to /account if OTP is not verified
-        return NextResponse.redirect(new URL("/account", request.url));
-      }
-    }
 
+  // Check if the user is trying to access `/change_user_password`
+  if (url.pathname.startsWith("/change_user_password")) {
+    if (token && token.otpVerified) {
+      // Allow access if OTP is verified without redirection
+      return NextResponse.next(); // Allow access to the page
+    } else {
+      // Redirect to /account if OTP is not verified
+      return NextResponse.redirect(new URL("/account", request.url));
+    }
+  }
 
   return NextResponse.next();
 }

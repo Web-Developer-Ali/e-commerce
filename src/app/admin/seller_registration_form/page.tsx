@@ -30,12 +30,15 @@ const SellerRegistrationForm: React.FC = () => {
         setIsCheckingShopname(true);
         setShopNameMessage("");
         try {
-          const response = await axios.get(`/api/seller_routes/check-shopname-unique?shopName=${shopName}`);
+          const response = await axios.get(
+            `/api/seller_routes/check-shopname-unique?shopName=${shopName}`
+          );
           setShopNameMessage(response.data.message);
         } catch (error) {
           const axiosError = error as AxiosError<ApiResponce>;
           setShopNameMessage(
-            axiosError.response?.data.message ?? "Error in checking shop name uniqueness"
+            axiosError.response?.data.message ??
+              "Error in checking shop name uniqueness"
           );
         } finally {
           setIsCheckingShopname(false);
@@ -68,8 +71,9 @@ const SellerRegistrationForm: React.FC = () => {
       router.push("/admin/adminHomePage");
     } catch (error: any) {
       const axiosError = error as AxiosError<ApiResponce>;
-      let errorMessage = axiosError.response?.data.message || "Something went wrong";
-      
+      let errorMessage =
+        axiosError.response?.data.message || "Something went wrong";
+
       toast({
         title: "Registration Failed",
         description: errorMessage,
@@ -79,8 +83,10 @@ const SellerRegistrationForm: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Register as a Seller</h2>
+    <div className="container mx-auto p-4 dark:bg-gray-800 bg-white">
+      <h2 className="text-2xl font-bold mb-4 dark:text-white text-black">
+        Register as a Seller
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Display error and success messages */}
         {shopNameMessage && (
@@ -94,10 +100,10 @@ const SellerRegistrationForm: React.FC = () => {
             {shopNameMessage}
           </p>
         )}
-        
+
         {/* Shop Name Input */}
         <div>
-          <label htmlFor="shopName" className="block mb-1">
+          <label htmlFor="shopName" className="block mb-1 dark:text-white">
             Shop Name
           </label>
           <input
@@ -108,14 +114,14 @@ const SellerRegistrationForm: React.FC = () => {
               setShopName(e.target.value);
               debounced(e.target.value);
             }}
-            className="border p-2 w-full"
+            className="border p-2 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-        
+
         {/* Address Input */}
         <div>
-          <label htmlFor="address" className="block mb-1">
+          <label htmlFor="address" className="block mb-1 dark:text-white">
             Address
           </label>
           <input
@@ -123,14 +129,14 @@ const SellerRegistrationForm: React.FC = () => {
             id="address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            className="border p-2 w-full"
+            className="border p-2 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-        
+
         {/* Country Code Input */}
         <div>
-          <label htmlFor="countryCode" className="block mb-1">
+          <label htmlFor="countryCode" className="block mb-1 dark:text-white">
             Country Code
           </label>
           <input
@@ -138,14 +144,14 @@ const SellerRegistrationForm: React.FC = () => {
             id="countryCode"
             value={countryCode}
             onChange={(e) => setCountryCode(e.target.value)}
-            className="border p-2 w-full"
+            className="border p-2 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-        
+
         {/* Phone Number Input */}
         <div>
-          <label htmlFor="phoneNumber" className="block mb-1">
+          <label htmlFor="phoneNumber" className="block mb-1 dark:text-white">
             Phone Number
           </label>
           <input
@@ -153,28 +159,28 @@ const SellerRegistrationForm: React.FC = () => {
             id="phoneNumber"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="border p-2 w-full"
+            className="border p-2 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
           />
         </div>
-        
+
         {/* Shipping Type Select */}
         <div>
-          <label htmlFor="shippingType" className="block mb-1">
+          <label htmlFor="shippingType" className="block mb-1 dark:text-white">
             Shipping Type
           </label>
           <select
             id="shippingType"
             value={shippingType}
             onChange={(e) => setShippingType(e.target.value)}
-            className="border p-2 w-full"
+            className="border p-2 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           >
             <option value="Standard">Standard</option>
             <option value="Express">Express</option>
             <option value="NextDay">Next Day</option>
           </select>
         </div>
-        
+
         {/* Submit Button */}
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">
           Register as Seller
