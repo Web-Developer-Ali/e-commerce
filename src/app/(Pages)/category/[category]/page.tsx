@@ -1,7 +1,7 @@
 "use client";
 import { ApiResponce } from "@/types/ApiResponce";
 import axios, { AxiosError } from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState , useMemo } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useParams, useRouter } from "next/navigation";
 import StarRating from "@/components/StarRating";
@@ -74,22 +74,19 @@ function Page() {
     [router]
   );
 
-  const fetchProductDebounced = useCallback(
+  const fetchProductDebounced = useMemo(() => 
     debounce(async (category: string | undefined) => {
       try {
         if (category) {
-          const response = await axios.get(
-            `/api/products?CategoryTypes=${category}`
-          );
+          const response = await axios.get(`/api/products?CategoryTypes=${category}`);
           console.log(response);
           setProducts(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching products:", error);
       }
-    }, 500),
-    [] // Empty dependency array, since debounce has no external dependencies
-  );
+    }, 500), 
+  []);
 
   useEffect(() => {
     const category = Array.isArray(params.category)
@@ -101,7 +98,7 @@ function Page() {
     return () => {
       fetchProductDebounced.cancel();
     };
-  }, [params.category]);
+  }, [fetchProductDebounced, params.category]);
   return (
     <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">

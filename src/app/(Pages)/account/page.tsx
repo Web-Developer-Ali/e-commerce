@@ -44,7 +44,7 @@ const AccountPage: React.FC = () => {
 
     GetAllUserOrders();
     fetchSession();
-  }, []);
+  }, [toast]);
 
   const Logout = async () => {
     nprogress.start(); // Start the loading bar for logout
