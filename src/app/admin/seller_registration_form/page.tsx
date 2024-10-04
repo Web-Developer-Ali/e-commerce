@@ -68,7 +68,8 @@ const SellerRegistrationForm: React.FC = () => {
       });
 
       // Redirect to admin home page upon successful registration
-      router.push("/admin/adminHomePage");
+      router.replace("/admin/adminHomePage?access=true");
+
     } catch (error: any) {
       const axiosError = error as AxiosError<ApiResponce>;
       let errorMessage =

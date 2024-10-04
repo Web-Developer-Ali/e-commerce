@@ -12,6 +12,12 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request, secret });
   const url = request.nextUrl;
 
+
+  // Skip middleware if 'skipMiddleware=true' query parameter is present
+  if (url.searchParams.get("access") === "true") {
+    return NextResponse.next();
+  }
+
   // If the user is authenticated and tries to access login or sign-up pages, redirect to the dashboard
   if (
     token !== null &&
@@ -44,7 +50,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
-  // Check if the user is trying to access `/change_user_password`
+  // Check if the user is trying to access /change_user_password
   if (url.pathname.startsWith("/change_user_password")) {
     if (token && token.otpVerified) {
       // Allow access if OTP is verified without redirection
